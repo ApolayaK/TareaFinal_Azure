@@ -1,9 +1,9 @@
 <?php
 include 'db.php';
-if (isset($_GET['id']) && is_numeric($_GET['id'])) {
-    $stmt = $conn->prepare("DELETE FROM periodistas WHERE id = ?");
-    $stmt->execute([$_GET['id']]);
-}
+$id = $_GET['id'] ?? die('❌ ID no especificado.');
+
+$stmt = $conn->prepare("DELETE FROM periodistas WHERE id=?");
+$stmt->execute([$id]);
 header("Location: index.php");
 exit();
 ?>

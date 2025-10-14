@@ -1,6 +1,6 @@
 <?php
 include 'db.php';
-$stmt = $conn->query("SELECT id, nombre, apellido, medio, especialidad FROM periodistas ORDER BY apellido ASC");
+$stmt = $conn->query("SELECT id, nombre, apellido, medio, especialidad, email, telefono FROM periodistas ORDER BY id DESC");
 $periodistas = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
@@ -9,52 +9,50 @@ $periodistas = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <title>Panel de Periodistas</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+    <div class="container">
+        <h2><i class="fa-solid fa-newspaper"></i> Panel de Periodistas</h2>
 
-    <header>
-        <h1><i class="fa-solid fa-newspaper"></i> Sistema de Gestión de Periodistas</h1>
-        <a href="create.php" class="btn btn-warning"><i class="fa-solid fa-user-plus"></i> Nuevo</a>
-    </header>
+        <a href="create.php" class="btn"><i class="fa-solid fa-user-plus"></i> Nuevo</a>
 
-    <main class="container">
-        <h3 class="text-center text-primary mb-4">Listado General</h3>
-
-        <table class="table table-hover align-middle">
+        <table>
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Nombre Completo</th>
+                    <th>Nombre</th>
                     <th>Medio</th>
                     <th>Especialidad</th>
+                    <th>Email</th>
+                    <th>Teléfono</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 <?php foreach ($periodistas as $p): ?>
                     <tr>
-                        <td><?= $p['id'] ?></td>
-                        <td><?= htmlspecialchars($p['nombre'] . ' ' . $p['apellido']) ?></td>
-                        <td><?= htmlspecialchars($p['medio']) ?></td>
-                        <td><?= htmlspecialchars($p['especialidad']) ?></td>
+                        <td><?= htmlspecialchars($p['nombre'] . ' ' . $p['apellido']); ?></td>
+                        <td><?= htmlspecialchars($p['medio']); ?></td>
+                        <td><?= htmlspecialchars($p['especialidad']); ?></td>
+                        <td><?= htmlspecialchars($p['email']); ?></td>
+                        <td><?= htmlspecialchars($p['telefono']); ?></td>
                         <td>
-                            <a href="edit.php?id=<?= $p['id'] ?>" class="btn btn-sm btn-primary">
-                                <i class="fa-solid fa-pen-to-square"></i> Editar
-                            </a>
-                            <a href="delete.php?id=<?= $p['id'] ?>" class="btn btn-sm btn-danger"
-                                onclick="return confirm('¿Eliminar al periodista <?= htmlspecialchars($p['nombre']) ?>?');">
-                                <i class="fa-solid fa-trash"></i> Eliminar
-                            </a>
+                            <a href="edit.php?id=<?= $p['id']; ?>" class="icon-action" title="Editar"><i
+                                    class="fa-solid fa-pen-to-square"></i></a>
+                            <a href="delete.php?id=<?= $p['id']; ?>" class="icon-action" title="Eliminar"
+                                onclick="return confirm('¿Seguro que deseas eliminar este registro?');"><i
+                                    class="fa-solid fa-trash"></i></a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
-    </main>
 
-    <footer>© 2025 Redacción Digital — Plataforma de Gestión Interna</footer>
+        <footer>© 2025 Ishume Productora - Área de Comunicaciones</footer>
+    </div>
 </body>
 
 </html>

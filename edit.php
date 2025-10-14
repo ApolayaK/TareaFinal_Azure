@@ -1,6 +1,6 @@
 <?php
 include 'db.php';
-$id = isset($_GET['id']) ? $_GET['id'] : die('ERROR: ID no especificado.');
+$id = $_GET['id'] ?? die('❌ ID no especificado.');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $sql = "UPDATE periodistas 
@@ -16,14 +16,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_POST['telefono'],
         $_POST['id']
     ]);
-    header("Location: index.php?action=updated");
+    header("Location: index.php");
     exit();
 }
 
-$sql = "SELECT TOP 1 id, nombre, apellido, medio, especialidad, email, telefono FROM periodistas WHERE id = ?";
-$stmt = $conn->prepare($sql);
+$stmt = $conn->prepare("SELECT TOP 1 * FROM periodistas WHERE id=?");
 $stmt->execute([$id]);
-$periodista = $stmt->fetch(PDO::FETCH_ASSOC);
+$p = $stmt->fetch(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -31,38 +30,26 @@ $periodista = $stmt->fetch(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <title>Editar Periodista</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-
-    <header>
-        <h1><i class="fa-solid fa-pen-to-square"></i> Editar Registro</h1>
-        <a href="index.php" class="btn btn-secondary"><i class="fa-solid fa-arrow-left"></i> Volver</a>
-    </header>
-
-    <main class="container">
-        <h3 class="text-center text-primary mb-4">Editar Información</h3>
+    <div class="container">
+        <h2><i class="fa-solid fa-pen-to-square"></i> Editar Periodista</h2>
         <form method="POST">
-            <input type="hidden" name="id" value="<?= $periodista['id'] ?>">
-            <div class="mb-3"><input class="form-control" type="text" name="nombre"
-                    value="<?= htmlspecialchars($periodista['nombre']) ?>" required></div>
-            <div class="mb-3"><input class="form-control" type="text" name="apellido"
-                    value="<?= htmlspecialchars($periodista['apellido']) ?>" required></div>
-            <div class="mb-3"><input class="form-control" type="text" name="medio"
-                    value="<?= htmlspecialchars($periodista['medio']) ?>"></div>
-            <div class="mb-3"><input class="form-control" type="text" name="especialidad"
-                    value="<?= htmlspecialchars($periodista['especialidad']) ?>"></div>
-            <div class="mb-3"><input class="form-control" type="email" name="email"
-                    value="<?= htmlspecialchars($periodista['email']) ?>"></div>
-            <div class="mb-3"><input class="form-control" type="text" name="telefono"
-                    value="<?= htmlspecialchars($periodista['telefono']) ?>"></div>
-            <button class="btn btn-primary w-100" type="submit"><i class="fa-solid fa-floppy-disk"></i> Guardar
-                Cambios</button>
+            <input type="hidden" name="id" value="<?= $p['id']; ?>">
+            <input type="text" name="nombre" value="<?= htmlspecialchars($p['nombre']); ?>" required>
+            <input type="text" name="apellido" value="<?= htmlspecialchars($p['apellido']); ?>" required>
+            <input type="text" name="medio" value="<?= htmlspecialchars($p['medio']); ?>">
+            <input type="text" name="especialidad" value="<?= htmlspecialchars($p['especialidad']); ?>">
+            <input type="email" name="email" value="<?= htmlspecialchars($p['email']); ?>">
+            <input type="text" name="telefono" value="<?= htmlspecialchars($p['telefono']); ?>">
+            <button type="submit" class="btn"><i class="fa-solid fa-save"></i> Guardar cambios</button>
         </form>
-    </main>
-
-    <footer>© 2025 Redacción Digital — Edición de Datos</footer>
+        <a href="index.php" class="btn" style="margin-top:15px;"><i class="fa-solid fa-arrow-left"></i> Volver</a>
+    </div>
 </body>
 
 </html>
